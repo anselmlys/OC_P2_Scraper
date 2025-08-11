@@ -1,5 +1,7 @@
 import re
 import requests
+from pathlib import Path
+import csv
 from bs4 import BeautifulSoup
 
 url = 'https://books.toscrape.com/catalogue/sharp-objects_997/index.html'
@@ -73,3 +75,12 @@ all_books[product_page_url]['price_excluding_tax'] = table['Price (excl. tax)']
 
 #Ajoute product_page_url dans le dictionnaire pour pouvoir accéder à l'info
 all_books[product_page_url]['product_page_url'] = product_page_url
+
+
+#Sauvegarde les info du livre dans un fichier CSV
+Path("data").mkdir(parents=True, exist_ok=True)
+
+with open('data/data.csv', 'w', newline='', encoding='utf-8') as csv_file:
+    writer = csv.DictWriter(csv_file, fieldnames=all_books[product_page_url].keys())
+    writer.writeheader()
+    writer.writerow(all_books[product_page_url])
