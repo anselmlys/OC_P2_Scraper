@@ -5,7 +5,7 @@ It collects data about the books sold on this website: https://books.toscrape.co
 
 
 ## Features
-- Scrapes: book information
+- Scrapes: all books information from a specific category
 - Saves data in CSV format
 
 
@@ -41,6 +41,12 @@ Scraped CSV file is saved in data/ folder.
 - Python 3.10+
 - requests
 - beautifulsoup4
+
+
+## Limitations
+
+- If data is saved multiple times in the same hour, it will create duplicates in csv file.
+- If data is saved while the hour changes, this will split the csv file in two.
 
 
 ## Notes

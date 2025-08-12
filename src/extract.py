@@ -1,7 +1,51 @@
+from urllib.parse import urljoin
 import requests
 from bs4 import BeautifulSoup
 
 from transform import transform_rating_in_number, transform_availability_in_number
+
+
+def get_books_from_page(url):
+    '''Extract all books URLs from a specific page'''
+
+    page = requests.get(url, timeout=5)
+    soup = BeautifulSoup(page.content, 'html.parser')
+
+    books_details = soup.find_all('li', class_='col-xs-6 col-sm-4 col-md-3 col-lg-3')
+    books_urls_from_page = []
+        
+    for book_detail in books_details:
+        book_relative_url = book_detail.find('h3').a.get('href')
+        book_url = urljoin(page.url, book_relative_url)
+        books_urls_from_page.append(book_url)
+
+    return books_urls_from_page
+
+
+def check_if_next_page(url):
+    '''Check if there is a next page and return the html under next_bouton'''
+
+    page = requests.get(url, timeout=5)
+    soup = BeautifulSoup(page.content, 'html.parser')
+    next_bouton = soup.find('li', class_='next')
+    
+    return next_bouton
+
+
+def get_all_book(url):
+    '''Extract all books URLs of a category of books'''
+
+    books_urls = get_books_from_page(url)
+    next_bouton = check_if_next_page(url)
+
+    while next_bouton:
+        next_relative_url = next_bouton.a.get('href')
+        next_url = urljoin(url, next_relative_url)
+        books_urls.extend(get_books_from_page(next_url))
+        next_bouton = check_if_next_page(next_url)
+
+    return books_urls
+
 
 def get_book_information(url):
     try:
