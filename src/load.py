@@ -26,12 +26,15 @@ def save_csv(dictionary, category):
         print("Permission Error", {errp})
 
 
-def download_image(book_name, image_url):
+def download_image(category, book_name, image_url):
     Path("media").mkdir(parents=True, exist_ok=True)
+
+    category_folder = 'media/'+category
+    Path(category_folder).mkdir(parents=True, exist_ok=True)
 
     image_data = requests.get(image_url).content
     book_name_reworked = re.sub(r'[^a-zA-Z]', '', book_name)
-    filename = 'media/'+book_name_reworked+'.jpg'
+    filename = 'media/'+category+'/'+book_name_reworked+'.jpg'
 
     with open(filename, 'wb') as image:
         image.write(image_data)

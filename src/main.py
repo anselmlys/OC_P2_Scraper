@@ -13,6 +13,7 @@ def main():
             book_information = get_book_information(book_url)
             save_csv(book_information, book_information['category'])
             download_image(
+                book_information['category'],
                 book_information['title'], 
                 book_information['image_url']
                 )
