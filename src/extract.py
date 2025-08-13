@@ -5,6 +5,21 @@ from bs4 import BeautifulSoup
 from transform import transform_rating_in_number, transform_availability_in_number
 
 
+def get_all_categories(url):
+    categories_urls = []
+
+    page = requests.get(url, timeout=5)
+    soup = BeautifulSoup(page.content, 'html.parser')
+
+    categories = soup.find('ul', class_='nav nav-list').ul.find_all('li')
+    for categorie in categories:
+        category_relative_url = categorie.a.get('href')
+        category_url = urljoin(page.url, category_relative_url)
+        categories_urls.append(category_url)
+
+    return categories_urls
+
+
 def get_books_from_page(url):
     '''Extract all books URLs from a specific page'''
 
