@@ -71,7 +71,8 @@ def get_book_information(url):
         product_page_url = page.url
         title = soup.find('h1').string
         category = soup.find('ul', class_='breadcrumb').select('a')[2].get_text()
-        image_url = soup.find('div', class_='item active').find('img').get('src')
+        image_relative_url = soup.find('div', class_='item active').find('img').get('src')
+        image_url = urljoin(page.url, image_relative_url)
         description_zone = soup.find('div', id='product_description')
         if description_zone:
             product_description = description_zone.find_next_sibling().get_text()
