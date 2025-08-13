@@ -1,5 +1,5 @@
 from extract import get_book_information, get_all_book, get_all_categories
-from load import save_csv
+from load import save_csv, download_image
 
 
 def main():
@@ -12,6 +12,10 @@ def main():
         for book_url in books_urls:
             book_information = get_book_information(book_url)
             save_csv(book_information, book_information['category'])
+            download_image(
+                book_information['title'], 
+                book_information['image_url']
+                )
 
 
 if __name__ == "__main__":
