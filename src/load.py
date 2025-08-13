@@ -1,14 +1,14 @@
-from datetime import datetime
+from datetime import date
 from pathlib import Path
 import csv
 
 
-def save_csv(dictionary):
+def save_csv(dictionary, category):
     try:
         Path("data").mkdir(parents=True, exist_ok=True)
 
-        current_datetime = datetime.now().strftime('%y-%m-%d_%Hh')
-        file_name = "data/books-info_"+current_datetime+".csv"
+        current_datetime = date.today().strftime('%y%m%d')
+        file_name = "data/"+category+"_"+current_datetime+".csv"
         file_path = Path(file_name)
         file_existence = file_path.is_file()
 

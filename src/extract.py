@@ -124,6 +124,7 @@ def get_book_information(url):
 
     except AttributeError as errattr:
         print(f"Attribute Error: {errattr}")
+        print(f"Problematic page:\n{product_page_url}\n")
         raise
     
     except KeyError as errk:
