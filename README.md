@@ -1,12 +1,25 @@
 # OC Project 2: Scraper
 
 This project is carried out as part of the OpenClassrooms training program. 
-It collects data about the books sold on this website: https://books.toscrape.com/ and save it on a csv file.
+It collects data about the books sold on this website: https://books.toscrape.com/ and save it on csv file. It also collects all the book images in jpg format.
 
 
 ## Features
-- Scrapes: all books information from a specific category
-- Saves data in CSV format
+- Scrapes books data from all categories:
+    - product page url
+    - universal product code
+    - title
+    - price including tax
+    - price excluding tax
+    - number available
+    - product description
+    - category
+    - review rating
+    - image url
+    - image
+    
+- Saves book information in separate CSV files per category.
+- Saves images in jpg format organized in folders by category.
 
 
 ## Installation
@@ -15,7 +28,7 @@ It collects data about the books sold on this website: https://books.toscrape.co
 git clone https://github.com/anselmlys/OC_P2_Scraper.git
 ```
 
-2. Create and activate virtual environment (in git bash):
+2. Create and activate virtual environment:
 ```bash
 python -m venv env
 . env/Scripts/activate
@@ -33,7 +46,7 @@ Run the scraper with:
 ```bash
 python main.py
 ```
-Scraped CSV file is saved in data/ folder.
+CSV files are saved in data/ folder and jpg are saved in media/ folder.
 
 
 ## Dependencies
@@ -45,8 +58,8 @@ Scraped CSV file is saved in data/ folder.
 
 ## Limitations
 
-- If data is saved multiple times in the same hour, it will create duplicates in csv file.
-- If data is saved while the hour changes, this will split the csv file in two.
+- If data is saved multiple times in the same day, it will create duplicates in csv file.
+- If data is being saved during day change, this will split in two the currently open csv file.
 
 
 ## Notes
