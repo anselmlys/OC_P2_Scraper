@@ -14,7 +14,7 @@ def main():
             save_csv(book_information, book_information['category'])
             download_image(
                 book_information['category'],
-                book_information['title'], 
+                book_information['universal_product_code'], 
                 book_information['image_url']
                 )
 
