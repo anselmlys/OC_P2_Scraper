@@ -6,6 +6,7 @@ from transform import transform_rating_in_number, transform_availability_in_numb
 
 
 def get_all_categories(url):
+    '''Extract the URL of each category'''
     categories_urls = []
 
     page = requests.get(url, timeout=5)
@@ -21,7 +22,7 @@ def get_all_categories(url):
 
 
 def get_books_from_page(url):
-    '''Extract all books URLs from a specific page'''
+    '''Extract all books URLs from a specific page of a category'''
 
     page = requests.get(url, timeout=5)
     soup = BeautifulSoup(page.content, 'html.parser')
@@ -47,8 +48,8 @@ def check_if_next_page(url):
     return next_bouton
 
 
-def get_all_book(url):
-    '''Extract all books URLs of a category of books'''
+def get_all_books_by_category(url):
+    '''Extract all book URLs of a category'''
 
     books_urls = get_books_from_page(url)
     next_bouton = check_if_next_page(url)
