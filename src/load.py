@@ -4,18 +4,6 @@ import csv
 import requests
 
 
-def save_csv_and_images(queue):
-    while True:
-        book_information = queue.get()
-
-        if book_information is None:
-            break
-        save_csv(book_information, book_information['category'])
-        download_image(book_information['category'], 
-                        book_information['universal_product_code'],
-                        book_information['image_url'])
-
-
 def save_csv(dictionary, category):
     try:
         Path("data").mkdir(parents=True, exist_ok=True)

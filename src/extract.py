@@ -5,22 +5,6 @@ from bs4 import BeautifulSoup
 from transform import transform_rating_in_number, transform_availability_in_number
 
 
-def get_all_book_information(url, queue):
-    all_book_urls = []
-
-    category_urls = get_all_categories(url)
-
-    for category_url in category_urls:
-        book_urls_by_category = get_all_books_by_category(category_url)
-        all_book_urls.extend(book_urls_by_category)
-
-    for book_url in all_book_urls:
-        book_information = get_book_information(book_url)
-        queue.put(book_information)
-
-    queue.put(None)
-
-
 def get_all_categories(url):
     '''Extract the URL of each category'''
 
