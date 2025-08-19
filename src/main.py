@@ -1,35 +1,48 @@
 from threading import Thread
 from queue import Queue
-import time
 
 from pipeline import get_category_urls, get_book_urls, get_all_book_information, save_csv_and_images
 
 
 def main():
-    start = time.time()
-
     url_to_scrape = 'https://books.toscrape.com/'
     queue1 = Queue()
     queue2 = Queue()
     queue3 = Queue()
+    thread_number_per_worker = 10
 
-    thread_category = Thread(target=get_category_urls, args=(url_to_scrape, queue1))
-    thread_book = Thread(target=get_book_urls, args=(queue1, queue2))
-    thread_information = Thread(target=get_all_book_information, args=(queue2, queue3))
-    thread_load = Thread(target=save_csv_and_images, args=(queue3,))
+    category_thread = Thread(target=get_category_urls, args=(url_to_scrape, queue1))
+    category_thread.start()
 
-    thread_category.start()
-    thread_book.start()
-    thread_information.start()
-    thread_load.start()
+    book_thread = Thread(target=get_book_urls, args=(queue1, queue2))
+    book_thread.start()
 
-    thread_category.join()
-    thread_book.join()
-    thread_information.join()
-    thread_load.join()
+    information_threads = []
+    for _ in range(thread_number_per_worker):
+        information_thread = Thread(target=get_all_book_information, args=(queue2, queue3))
+        information_thread.start()
+        information_threads.append(information_thread)
+    
+    load_threads = []
+    for _ in range(thread_number_per_worker):
+        load_thread = Thread(target=save_csv_and_images, args=(queue3,))
+        load_thread.start()
+        load_threads.append(load_thread)
 
-    end = time.time()
-    print(f'Execution time: {end-start}')
+    category_thread.join()
+    book_thread.join()
+
+    for _ in range(thread_number_per_worker):
+        queue2.put(None)
+
+    for information_thread in information_threads:
+        information_thread.join()
+
+    for _ in range(thread_number_per_worker):
+        queue3.put(None)
+
+    for load_thread in load_threads:
+        load_thread.join()
 
 
 if __name__ == "__main__":
