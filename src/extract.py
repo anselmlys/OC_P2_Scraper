@@ -7,45 +7,93 @@ from transform import transform_rating_in_number, transform_availability_in_numb
 
 def get_all_categories(url):
     '''Extract the URL of each category'''
-    categories_urls = []
 
-    page = requests.get(url, timeout=5)
-    soup = BeautifulSoup(page.content, 'html.parser')
+    try:
+        categories_urls = []
 
-    categories = soup.find('ul', class_='nav nav-list').ul.find_all('li')
-    for categorie in categories:
-        category_relative_url = categorie.a.get('href')
-        category_url = urljoin(page.url, category_relative_url)
-        categories_urls.append(category_url)
+        page = requests.get(url, timeout=5)
+        soup = BeautifulSoup(page.content, 'html.parser')
 
-    return categories_urls
+        categories = soup.find('ul', class_='nav nav-list').ul.find_all('li')
+        for categorie in categories:
+            category_relative_url = categorie.a.get('href')
+            category_url = urljoin(page.url, category_relative_url)
+            categories_urls.append(category_url)
+
+        return categories_urls
+    
+    except requests.exceptions.ConnectionError as errc:
+        print("Connection Error:", {errc})
+
+    except requests.exceptions.HTTPError as errh:
+        print("HTTP Error", {errh})
+
+    except requests.exceptions.Timeout as errt:
+        print("Timeout Error", {errt})
+
+    except requests.exceptions.RequestException as errr:
+        print("Request Error", {errr})
+
+    except AttributeError as errattr:
+        print(f"Attribute Error: {errattr}")
+        print(f"Problematic page:\n{page.url}\n")
 
 
 def get_books_from_page(url):
     '''Extract all books URLs from a specific page of a category'''
 
-    page = requests.get(url, timeout=5)
-    soup = BeautifulSoup(page.content, 'html.parser')
+    try:
+        page = requests.get(url, timeout=5)
+        soup = BeautifulSoup(page.content, 'html.parser')
 
-    books_details = soup.find_all('li', class_='col-xs-6 col-sm-4 col-md-3 col-lg-3')
-    books_urls_from_page = []
-        
-    for book_detail in books_details:
-        book_relative_url = book_detail.find('h3').a.get('href')
-        book_url = urljoin(page.url, book_relative_url)
-        books_urls_from_page.append(book_url)
+        books_details = soup.find_all('li', class_='col-xs-6 col-sm-4 col-md-3 col-lg-3')
+        books_urls_from_page = []
+            
+        for book_detail in books_details:
+            book_relative_url = book_detail.find('h3').a.get('href')
+            book_url = urljoin(page.url, book_relative_url)
+            books_urls_from_page.append(book_url)
 
-    return books_urls_from_page
+        return books_urls_from_page
+    
+    except requests.exceptions.ConnectionError as errc:
+        print("Connection Error:", {errc})
+
+    except requests.exceptions.HTTPError as errh:
+        print("HTTP Error", {errh})
+
+    except requests.exceptions.Timeout as errt:
+        print("Timeout Error", {errt})
+
+    except requests.exceptions.RequestException as errr:
+        print("Request Error", {errr})
+
+    except AttributeError as errattr:
+        print(f"Attribute Error: {errattr}")
+        print(f"Problematic page:\n{page.url}\n")
 
 
 def check_if_next_page(url):
     '''Check if there is a next page and return the html under next_bouton'''
 
-    page = requests.get(url, timeout=5)
-    soup = BeautifulSoup(page.content, 'html.parser')
-    next_bouton = soup.find('li', class_='next')
+    try:
+        page = requests.get(url, timeout=5)
+        soup = BeautifulSoup(page.content, 'html.parser')
+        next_bouton = soup.find('li', class_='next')
+        
+        return next_bouton
     
-    return next_bouton
+    except requests.exceptions.ConnectionError as errc:
+        print("Connection Error:", {errc})
+
+    except requests.exceptions.HTTPError as errh:
+        print("HTTP Error", {errh})
+
+    except requests.exceptions.Timeout as errt:
+        print("Timeout Error", {errt})
+
+    except requests.exceptions.RequestException as errr:
+        print("Request Error", {errr})
 
 
 def get_all_books_by_category(url):
@@ -64,6 +112,8 @@ def get_all_books_by_category(url):
 
 
 def get_book_information(url):
+    '''Get all book information from a book page'''
+
     try:
         page = requests.get(url, timeout=5)
         page.raise_for_status()
@@ -110,26 +160,20 @@ def get_book_information(url):
 
     except requests.exceptions.ConnectionError as errc:
         print("Connection Error:", {errc})
-        raise
 
     except requests.exceptions.HTTPError as errh:
         print("HTTP Error", {errh})
-        raise
 
     except requests.exceptions.Timeout as errt:
         print("Timeout Error", {errt})
-        raise
 
     except requests.exceptions.RequestException as errr:
         print("Request Error", {errr})
-        raise
 
     except AttributeError as errattr:
         print(f"Attribute Error: {errattr}")
         print(f"Problematic page:\n{product_page_url}\n")
-        raise
     
     except KeyError as errk:
         print("Key Error", {errk})
-        raise
 

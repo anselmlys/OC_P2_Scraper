@@ -27,13 +27,17 @@ def save_csv(dictionary, category):
 
 
 def download_image(category, book_upc, image_url):
-    Path("media").mkdir(parents=True, exist_ok=True)
+    try:
+        Path("media").mkdir(parents=True, exist_ok=True)
 
-    category_folder = 'media/'+category
-    Path(category_folder).mkdir(parents=True, exist_ok=True)
+        category_folder = 'media/'+category
+        Path(category_folder).mkdir(parents=True, exist_ok=True)
 
-    image_data = requests.get(image_url).content
-    filename = 'media/'+category+'/'+book_upc+'.jpg'
+        image_data = requests.get(image_url).content
+        filename = 'media/'+category+'/'+book_upc+'.jpg'
 
-    with open(filename, 'wb') as image:
-        image.write(image_data)
+        with open(filename, 'wb') as image:
+            image.write(image_data)
+            
+    except PermissionError as errp:
+        print("Permission Error", {errp})
