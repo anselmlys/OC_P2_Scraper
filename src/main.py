@@ -1,36 +1,29 @@
-from extract import get_book_information, get_all_books_by_category, get_all_categories
-from load import save_csv, download_image
+from threading import Thread
+from queue import Queue
+import time
+
+from extract import get_all_book_information
+from load import save_csv_and_images
 
 
 def main():
+    start = time.time()
+
     url_to_scrape = 'https://books.toscrape.com/'
-    all_books_urls = []
-    all_books_information = []
+    book_queue = Queue()
 
-    # Get all category URLs
-    categories_urls = get_all_categories(url_to_scrape)
- 
-    # Get all book URLs
-    for category_url in categories_urls:
-        books_urls_by_category = get_all_books_by_category(category_url)
-        all_books_urls.extend(books_urls_by_category)
+    load_thread = Thread(target=save_csv_and_images, args=(book_queue,))
+    load_thread.start()
 
-    # Get all books information
-    for book_url in all_books_urls:
-        book_information = get_book_information(book_url)
-        all_books_information.append(book_information)
+    extract_thread = Thread(target=get_all_book_information, 
+                            args=(url_to_scrape, book_queue))
+    extract_thread.start()
     
-    # Save all books information in csv files
-    for book_information in all_books_information:
-        save_csv(book_information, book_information['category'])
+    extract_thread.join()
+    load_thread.join()
 
-    # Save all book images in jpg format
-    for book_information in all_books_information:
-        download_image(
-            book_information['category'],
-            book_information['universal_product_code'], 
-            book_information['image_url']
-            )
+    end = time.time()
+    print(f'Execution time: {end-start}')
 
 
 if __name__ == "__main__":

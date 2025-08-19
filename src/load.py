@@ -1,8 +1,19 @@
-import re
 from datetime import date
 from pathlib import Path
 import csv
 import requests
+
+
+def save_csv_and_images(queue):
+    while True:
+        book_information = queue.get()
+
+        if book_information is None:
+            break
+        save_csv(book_information, book_information['category'])
+        download_image(book_information['category'], 
+                        book_information['universal_product_code'],
+                        book_information['image_url'])
 
 
 def save_csv(dictionary, category):
@@ -38,6 +49,6 @@ def download_image(category, book_upc, image_url):
 
         with open(filename, 'wb') as image:
             image.write(image_data)
-            
+
     except PermissionError as errp:
         print("Permission Error", {errp})
